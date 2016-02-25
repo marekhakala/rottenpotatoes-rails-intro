@@ -67,4 +67,9 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+
+  private
+    def is_param_set? name
+      params[name] and params[name] != session[name]
+    end
 end
