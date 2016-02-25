@@ -15,7 +15,9 @@ class MoviesController < ApplicationController
     @sort_order = nil
     @all_ratings = Movie.all_ratings
 
-    redirect = true unless params[:ratings].nil? or params[:order_by].nil?
+    redirect = true if not session[:ratings].nil? and params[:ratings].nil?
+    redirect = true if not session[:sort_by].nil? and params[:sort_by].nil?
+
     session[:ratings] = params[:ratings].keys if is_param_set?(:ratings)
     session[:sort_by] = params[:sort_by] if is_param_set?(:sort_by)
 
@@ -30,11 +32,11 @@ class MoviesController < ApplicationController
     if redirect
       ratings = {}
 
-      session[:ratings].keys.each do |key|
+      session[:ratings].each do |key|
         ratings[key] = 1
       end
 
-      redirect_to order_by: session[:sort_by], ratings: ratings
+      redirect_to sort_by: session[:sort_by], ratings: ratings
     end
 
     @movies = @movies.order(@sort_order) unless @sort_order.nil?
